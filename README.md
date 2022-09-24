@@ -56,6 +56,3 @@ sections = [{
 },...]
 ```
 
-## DockerUI and MaterialUI
-
-These components acts as wrapper for `UIContainer` and add some features.
