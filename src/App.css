@@ -1,38 +1,544 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+input,
+div,
+a {
+    margin: 0px;
+}
+
+html,
+body,
+#root,
 .App {
-  text-align: center;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+textarea,
+pre {
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.App {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    background-color: rgb(29, 29, 29);
 }
 
-.App-link {
-  color: #61dafb;
+/* Generic scrollbar */
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* width */
+::-webkit-scrollbar {
+    width: 3px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(212, 212, 212);
+    outline: 2px solid (var(--bg-color));
+    outline-offset: -2px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+}
+
+/* input spinners */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Define all the properties here */
+.App {
+    /* UI -Containers */
+    --uic-border-color: rgb(86, 86, 86);
+    --uic-border-color-active: rgb(134, 134, 134);
+    --uic-bg-color: rgb(27, 27, 30);
+    --uic-heading-fontsize: 18px;
+    --uic-heading-color: rgb(195, 195, 195);
+    --uic-section-heading-fontsize: 12px;
+    --uic-section-heading-color: rgb(155, 155, 155);
+
+    --property-fontsize: 12px;
+    --property-color: rgb(140, 140, 140);
+
+    /* Editors */
+    --editor-button-bg-color: inherit;
+    --editor-button-hover-bg-color: rgb(66, 66, 66);
+    --editor-button-color: var(--property-color);
+    --editor-button-border-color: var(--uic-border-color);
+}
+
+/* ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+.no-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.parent-fill {
+    width: 100%;
+    height: 100%;
+}
+
+.relative-wrapper {
+    position: relative;
+    height: 0px;
+    width: 100%;
+}
+
+.popup-bg {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.selected {
+    background-color: gray;
+    outline: 2px solid white;
+}
+
+.disable-pointer-events {
+    pointer-events: none;
+}
+
+.flex-row-centre {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.align-start {
+    align-items: flex-start;
+}
+.justify-start {
+    justify-content: flex-start;
+}
+
+/* ///////////////////////////////////////////////// CONTAINERS ////////////////////////////////////////////////////// */
+
+/* Material Editor */
+
+.editor {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.materialeditor {
+}
+
+.materialeditor--detailspanel {
+    background-color: var(--uic-bg-color);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    z-index: 1;
+    border-left: 2px solid var(--uic-border-color);
+}
+
+/* Material ui */
+.materialui {
+    padding: 0px 10px;
+    padding-bottom: 10px;
+    background-color: var(--uic-bg-color);
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+
+    width: 300px;
+    max-height: 600px;
+    overflow: hidden;
+    z-index: 4;
+}
+
+.materialui-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    padding: 5px 10px;
+}
+
+.materialui-buttons-wrapper {
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.materialui-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+}
+
+/* Default Geomerty Ui */
+.default-geomerty-ui {
+    padding: 4px 2px 2px 2px;
+    background-color: var(--uic-bg-color);
+    overflow: hidden;
+    position: relative;
+    border-radius: 4px;
+    height: fit-content;
+    width: fit-content;
+    top: 5px;
+    left: 5px;
+    z-index: 2;
+
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+}
+
+/* /////////////////////////////////////////////// COMPONENTS /////////////////////////////////////////////////// */
+
+/* icons */
+
+.img-btn {
+    padding: 1px;
+    transition-duration: 0.2s;
+}
+.img-btn:hover {
+    filter: brightness(1.5);
+    scale: 1.1;
+}
+
+/* Buttons */
+.btn-container-center {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0px 5px;
+}
+
+.btn-container-center button {
+    min-width: 80px;
+    flex-grow: 1;
+}
+
+.btn-editor {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    background-color: var(--editor-button-bg-color);
+    color: var(--editor-button-color);
+    border: 2px solid var(--editor-button-border-color);
+    border-radius: 4px;
+    padding: 2px;
+    margin: 2px;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+}
+.btn-editor:hover {
+    background-color: var(--editor-button-hover-bg-color);
+}
+.btn-editor:active {
+    background-color: rgb(128, 128, 128);
+}
+
+/* ui-properites */
+
+.ui-container {
+    /* padding: 0px 10px 5px 10px; */
+    width: 100%;
+    height: 100%;
+    background-color: var(--uic-bg-color);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ui-heading-text {
+    font-size: var(--uic-heading-fontsize);
+    color: var(--uic-heading-color);
+    font-weight: bold;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.ui-heading-container {
+    margin: 0px auto 5px 5px;
+}
+
+.ui-section {
+}
+
+.ui-section-header {
+    color: var(--uic-section-heading-color);
+    font-size: var(--uic-section-heading-fontsize);
+    font-weight: bolder;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--uic-border-color);
+}
+
+.ui-section-header img {
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+}
+
+.ui-section-body {
+    margin-left: 20px;
+}
+
+.property {
+    color: var(--uic-color);
+    margin: 4px 0px;
+}
+
+.property-content {
+    width: 100%;
+    display: flex;
+}
+
+.property-input {
+    color: var(--property-color);
+    font-size: var(--property-fontsize);
+    min-width: 10px;
+    padding: 2px;
+    width: 10px;
+    flex-grow: 1;
+    background-color: inherit;
+    border: none;
+    outline: 1px solid var(--uic-border-color);
+    border-radius: 3px;
+}
+.property-input:focus {
+    outline: 2px solid var(--uic-border-color-active);
+}
+
+.property-textarea {
+    color: var(--property-color);
+    text-decoration: none;
+    padding: 5px;
+    background-color: inherit;
+    border: none;
+    outline: 1px dashed var(--uic-border-color);
+    border-radius: 4px;
+    width: 100%;
+    flex-grow: 1;
+
+    resize: none;
+}
+
+.property-textarea:focus {
+    outline: 2px solid var(--uic-border-color-active);
+}
+
+.property-textarea-sidebar {
+    width: 30px;
+}
+.property-textarea-button {
+    background-color: gray;
+    border-radius: 4px;
+    width: 26px;
+    height: 26px;
+    margin: 2px 2px;
+}
+
+.property-label {
+    width: 35%;
+    min-width: 60px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.property-text {
+    color: var(--property-color);
+    font-size: var(--uic-heading-fontsize);
+    font-size: 12px;
+    margin: 0px 4px;
+}
+
+.property-name {
+    color: var(--property-color);
+    font-size: var(--property-fontsize);
+    width: fit-content;
+    position: relative;
+    white-space: nowrap;
+    pointer-events: none;
+
+    transition-duration: 0s;
+    transition-timing-function: linear;
+}
+
+.property-divider {
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+.bool-prop-icon {
+    height: 16px;
+}
+
+.asset-property-body {
+    border: 2px solid var(--uic-border-color);
+    border-radius: 4px;
+}
+
+.property-asset-image {
+    height: 60px;
+    aspect-ratio: 1;
+}
+
+.property-asset-content {
+    color: white;
+    flex-grow: 1;
+    height: 60px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.property-asset-content .name {
+    white-space: nowrap;
+    overflow: hidden;
+    /* width: 80px; */
+    max-height: 36px;
+    line-height: 110%;
+    overflow: hidden;
+    font-weight: bolder;
+}
+.property-asset-content .type {
+    margin-top: auto;
+    color: var(--property-color);
+    font-size: var(--property-fontsize);
+}
+
+.property-text-type {
+    color: var(--property-color);
+    font-size: var(--property-fontsize);
+}
+
+.property-color-box {
+    background-color: white;
+    border-radius: 4px;
+    width: 100%;
+    height: 20px;
+}
+
+.property-dropbox {
+    border: 2px dashed var(--uic-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20px;
+    height: 40px;
+    border-radius: 4px;
+}
+
+.property-dropbox:hover {
+    /* border-color: rgb(120, 120, 120); */
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.property-dropbox:active {
+    border-color: rgb(71, 71, 71);
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.dropbox-dragover {
+    background-color: rgb(0, 255, 128, 0.5);
+    outline: 2px dashed rgb(0, 255, 128);
+}
+
+.property-filename {
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    overflow: hidden;
+}
+
+.btn-square-small {
+    width: 16px;
+    height: 16px;
+    margin: 1px;
+}
+
+/* property slider filled */
+.slider-fill {
+    background-color: rgba(255, 255, 255, 0.175);
+    border-right: 2px solid rgb(136, 136, 136);
+    pointer-events: none;
+}
+
+/* material ui components */
+.btn-materialui {
+}
+
+.btn-materialui.pan {
+    width: 40px;
+}
+
+/* defualt geomert ui buttons */
+.default-geomerty-ui img {
+    width: 40px;
+}
+.default-geomerty-ui img:hover {
+    background-color: rgba(255, 255, 255, 0.089);
+    filter: brightness(1.5);
+}
+.default-geomerty-ui img:active {
+    background-color: rgba(255, 255, 255, 0.089);
+    filter: brightness(2);
+}
+
+.default-geomerty-ui .hide {
+    height: 5px;
+    border-radius: 10px;
+    background-color: var(--property-color);
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+}
+
+.default-geomerty-ui .hide:hover {
+    filter: brightness(1.5);
+}
+
+.default-geomerty-ui .hide:active {
+    filter: brightness(2);
 }

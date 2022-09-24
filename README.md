@@ -1,70 +1,58 @@
-# Getting Started with Create React App
+# ThreeJS Scene Utility for Web
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A simple utility to load glb files and edit its material properties for each material indices.
 
-## Available Scripts
+## UIContainer, Sections and Properties
 
-In the project directory, you can run:
+This is the main wrapper component which takes in `sections` , `onChange`, `onUpdate` as props. UIContainers contains Sections and Sections contains Properties.
 
-### `npm start`
+### Property
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```json
+property={
+    name:"display name",
+    id:"id",
+    type:"bool",
+    initial:"",
+}
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Each property must contain atleast `name`, `id` and `type`. `initial` value can be passed by specifying it with approriate value . Available property types are `bool`, `color`, `integer`, `float`, `slider`, `texture`, `file` and `material`. Cetrain properties can take more elements
 
-### `npm test`
+-   `slider` can also take min and max value.
+-   `material` can take material and material index
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Simply drill properties with data you want to use as all the properties pass what data is passed to them with the value after change by onChange and onUpdate callbacks.
 
-### `npm run build`
+### Section
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```json
+section = {
+        sectionName:"Awesome Section",
+        SectionId:"Id",
+        properties:[...],
+    }
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Used to group related propertes propeties.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Final Structure
 
-### `npm run eject`
+So summing it up, pass sections array to UIContainer and it will build the properties interface.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```json
+sections = [{
+    sectionName:"Section A",
+    sectionId:"01",
+    property:[{
+        name:"Awesome Property",
+        id:"AP01",
+        type:"bool",
+        initial:true
+    },...]
+},...]
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## DockerUI and MaterialUI
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+These components acts as wrapper for `UIContainer` and add some features.
