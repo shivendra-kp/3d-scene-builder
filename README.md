@@ -8,7 +8,7 @@ This is the main wrapper component which takes in `sections` , `onChange`, `onUp
 
 ### Property
 
-```json
+```
 property={
     name:"display name",
     id:"id",
@@ -26,7 +26,7 @@ Simply drill properties with data you want to use as all the properties pass wha
 
 ### Section
 
-```json
+```
 section = {
         sectionName:"Awesome Section",
         SectionId:"Id",
@@ -40,7 +40,7 @@ Used to group related propertes propeties.
 
 So summing it up, pass sections array to UIContainer and it will build the properties interface.
 
-```json
+```
 sections = [{
     sectionName:"Section A",
     sectionId:"01",
