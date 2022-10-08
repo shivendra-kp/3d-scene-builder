@@ -11,13 +11,17 @@ const CP_DIMENSIONS = {
 const ColorPicker = (props) => {
     return (
         <>
-            <div style={{ position: "fixed", zIndex: 20, top: props.top + "px", left: props.left + "px" }} tabIndex="0">
+            <div
+                style={{ position: "fixed", zIndex: 20, top: props.top + "px", left: props.left + "px" }}
+                tabIndex="0"
+                className="colorpicker-container"
+            >
                 <RgbaColorPicker onChange={props.onChange} color={props.color} />
-                <div className="colorpicker-button-wrapper">
-                    <button className="colorpicker-button" onClick={props.onSave}>
+                <div className="btn-container-center">
+                    <button className="btn-editor btn-colorpicker" onClick={props.onSave}>
                         Ok
                     </button>
-                    <button className="colorpicker-button" onClick={props.onCancel}>
+                    <button className="btn-editor btn-colorpicker" onClick={props.onCancel}>
                         Cancel
                     </button>
                 </div>
@@ -48,7 +52,6 @@ const ColorProperty = (props) => {
     }, [init.r, init.g, init.b, init.a]);
 
     const handleClick = (e) => {
-        console.log("clicked");
         const vh = document.documentElement.clientHeight;
         const vw = document.documentElement.clientWidth;
         const position = { x: e.clientX, y: e.clientY };
@@ -58,7 +61,6 @@ const ColorProperty = (props) => {
         if (CP_DIMENSIONS.height + e.clientY > vh) {
             position.x = e.clientY - (e.clientY + CP_DIMENSIONS.height - vh) - 10;
         }
-        console.log(position);
         setColorPicker((state) => {
             return { ...state, visible: !state.visible, position: position };
         });

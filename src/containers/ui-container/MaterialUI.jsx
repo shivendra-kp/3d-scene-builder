@@ -1,16 +1,23 @@
 import { Suspense, useRef } from "react";
 import UIContainer from "./UIContainer";
 import {
-    getStandardMaterialProperties,
+    getMaterialProperties,
     loadTexture,
     unloadTexture,
     updateMaterialProperty,
+    getHash,
 } from "../../utils/threeUtils";
 import { Images } from "../../assets";
 
+const propertiesList = {
+    standard: getMaterialProperties("standard"),
+    basic: getMaterialProperties("basic"),
+    physical: getMaterialProperties("physical"),
+};
+
 const sections = {
     sectionId: "01",
-    properties: getStandardMaterialProperties(),
+    properties: propertiesList["standard"],
 };
 
 const POSITION = { top: 0, left: 0 };
@@ -23,6 +30,7 @@ const MaterialUI = (props) => {
     //set intial values of material properties
     if (mat && mat.data) {
         // console.log("load props");
+        sections.properties = propertiesList[mat.data.type];
         sections.properties.forEach((prop) => {
             prop.initial = mat.data[prop.id];
         });
@@ -66,6 +74,7 @@ const MaterialUI = (props) => {
         if (!mat) return;
         if (mat.material) {
             if (e.type === "texture") {
+                //if no file is sent
                 if (!e.file) {
                     if (mat.data[e.id]) {
                         unloadTexture(mat.data[e.id], mat.material.uuid);
@@ -75,17 +84,19 @@ const MaterialUI = (props) => {
 
                     return;
                 }
-                //remove old texture
+                //remove old texture if exists
                 if (mat.data[e.id]) {
                     unloadTexture(mat.data[e.id], mat.material.uuid);
                 }
+                //texture object
                 mat.data[e.id] = e.file;
+
                 loadTexture(e.file, mat.material.uuid, (texture) => {
                     updateMaterialProperty(mat.material, { name: e.id, type: e.type, value: texture });
                 });
                 return;
             }
-
+            //anything thats not texture
             updateMaterialProperty(mat.material, { name: e.id, type: e.type, value: e.value });
             mat.data[e.id] = e.value;
         }

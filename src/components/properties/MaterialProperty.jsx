@@ -1,12 +1,13 @@
 import PropertyLabel from "./PropertyLable";
 import { Images } from "../../assets";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 // import { AssetType, MapAssetToColor } from "../../utils/assetDefaults";
 
 const MaterialProperty = (props) => {
     const property = props.property || { name: "material" };
     const materialuuid = (property.material && property.material.uuid) || "none";
     const [state, setState] = useState({ editButton: false, highlightButton: false });
+    const matTypeUI = useRef();
 
     useEffect(() => {
         if (materialuuid === "none") {
@@ -27,8 +28,28 @@ const MaterialProperty = (props) => {
         });
         if (props.onChange) props.onChange({ ...property, action: "highlight" });
     };
-    const handleAddNew = () => {
-        if (props.onChange) props.onChange({ ...property, action: "add" });
+
+    const handleRequestAddNew = (e) => {
+        const rect = e.target.getBoundingClientRect();
+        matTypeUI.current.style.display = "block";
+        window.addEventListener("mousedown", handleCancel);
+        matTypeUI.current.style.top = rect.top + "px";
+        matTypeUI.current.style.left = rect.left + 20 + "px";
+    };
+
+    const handleCancel = (e) => {
+        window.removeEventListener("mousedown", handleCancel);
+
+        if (e.target.parentNode !== matTypeUI.current) {
+            console.log("clicked outside");
+            matTypeUI.current.style.display = "none";
+        }
+    };
+
+    const handleAddNew = (matType) => {
+        if (props.onChange) props.onChange({ ...property, action: "add", matType: matType });
+        window.removeEventListener("mousedown", handleCancel);
+        matTypeUI.current.style.display = "none";
     };
     const handleClear = () => {
         if (props.onChange) props.onChange({ ...property, action: "clear" });
@@ -64,7 +85,7 @@ const MaterialProperty = (props) => {
                         <img
                             className="btn-square-small img-btn"
                             title="add"
-                            onClick={handleAddNew}
+                            onClick={handleRequestAddNew}
                             alt=""
                             src={Images.plus}
                         ></img>
@@ -77,6 +98,35 @@ const MaterialProperty = (props) => {
                         alt=""
                         src={Images.cancel}
                     ></img>
+                    {/* Floating UI */}
+
+                    <div style={{ position: "fixed", background: "black", display: "none" }} ref={matTypeUI}>
+                        <div
+                            className="property-name btn-text"
+                            onClick={(e) => {
+                                handleAddNew("basic");
+                            }}
+                        >
+                            Basic
+                        </div>
+                        <div
+                            className="property-name btn-text"
+                            onClick={(e) => {
+                                handleAddNew("standard");
+                            }}
+                        >
+                            Standard
+                        </div>
+
+                        <div
+                            className="property-name btn-text"
+                            onClick={(e) => {
+                                handleAddNew("physical");
+                            }}
+                        >
+                            Physical
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

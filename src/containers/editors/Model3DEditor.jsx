@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
     PerspectiveCamera,
@@ -9,26 +8,25 @@ import {
 
 import { Images } from "../../assets";
 import {
-    BoxGeometry,
-    ConeGeometry,
-    CylinderGeometry,
-    MeshPhysicalMaterial,
-    MeshStandardMaterial,
-    PlaneGeometry,
-    SphereGeometry,
-} from "three";
-import { gltfLoader, meshFromGltf, unloadTexture } from "../../utils/threeUtils";
+    getMaterial,
+    gltfLoader,
+    meshFromGltf,
+    unloadTexture,
+    defaulMat,
+    highlightMat,
+    GEOMETRY,
+    MATERIAL,
+} from "../../utils/threeUtils";
 import { Suspense } from "react";
 import { useState } from "react";
 import MaterialUI from "../ui-container/MaterialUI";
 import { useEffect } from "react";
-import { getMaterialKeyValue } from "../../utils/threeUtils";
 
 import DockerUI from "../ui-container/DockerUI";
 import DefaultGeometryUI from "../ui-container/DefaultGeometryUI";
+import { useRef } from "react";
 
-const defaulMat = new MeshPhysicalMaterial();
-const highlightMat = new MeshStandardMaterial({ color: "orange", emissive: "orange" });
+const CLEAR_MATERIALS = true;
 
 // cache state
 
@@ -54,16 +52,31 @@ const FileSection = {
     ],
 };
 
+const envSection = {
+    sectionName: "Environment",
+    sectionId: "02",
+    properties: [
+        {
+            name: "Map",
+            type: "texture",
+            id: "env_001",
+        },
+    ],
+};
+
+const defaulSections = [FileSection, envSection];
+
 // component
 const Model3DEditor = (props) => {
+    const envRef = useRef();
     const [state, setState] = useState({
         defaultScene: { active: false, geometry: null, material: null },
-        MUI: { disabled: true, active: null },
+        MUI: { disabled: true, active: null, type: "Standard" },
         gltf: null,
-        sections: [FileSection],
+        sections: [...defaulSections],
     });
     const [update, setUpdate] = useState(false);
-    const editorId = "001";
+    const editorId = props.editorId || "001";
 
     // call once
     useEffect(() => {
@@ -74,10 +87,14 @@ const Model3DEditor = (props) => {
             return {
                 ...s,
                 defaultScene: { active: true, geometry: GEOMETRY.sphere, material: MATERIAL.material },
-                sections: [s.sections[0], matSec],
+                sections: [...defaulSections, matSec],
             };
         });
     }, [editorId]);
+
+    useEffect(() => {
+        console.log(envRef.current);
+    }, [envRef.current]);
 
     const handlePropertyChange = (e) => {
         if (e.type === "material") {
@@ -90,7 +107,8 @@ const Model3DEditor = (props) => {
 
                     return;
                 case "add":
-                    addMaterial(editorId, mi);
+                    // Add different material properties
+                    addMaterial(editorId, mi, e.matType);
                     setUpdate(!update);
                     return;
 
@@ -107,7 +125,7 @@ const Model3DEditor = (props) => {
                         setState((s) => {
                             return {
                                 ...s,
-                                MUI: { disabled: false, active: MATERIAL },
+                                MUI: { disabled: false, active: MATERIAL, type: "" },
                             };
                         });
                         return;
@@ -138,7 +156,7 @@ const Model3DEditor = (props) => {
                         ...s,
                         gltf: null,
                         file: null,
-                        sections: [s.sections[0], matSec],
+                        sections: [...defaulSections, matSec],
                         defaultScene: { ...s.defaultScene, active: true },
                     };
                 });
@@ -150,11 +168,10 @@ const Model3DEditor = (props) => {
                 URL.revokeObjectURL(url);
                 addModel(editorId, gltf, e.file);
                 setState((s) => {
-                    const sec0 = s.sections[0];
                     return {
                         ...s,
                         gltf: gltf,
-                        sections: [sec0, ...CACHE.sections[editorId]],
+                        sections: [...defaulSections, ...CACHE.sections[editorId]],
                         defaultScene: { ...s.defaultScene, active: false },
                     };
                 });
@@ -186,7 +203,7 @@ const Model3DEditor = (props) => {
                 return {
                     ...s,
                     defaultScene: { ...s.defaultScene, active: false },
-                    sections: [s.sections[0], ...CACHE.sections[editorId]],
+                    sections: [...defaulSections, ...CACHE.sections[editorId]],
                 };
             });
         } else {
@@ -196,7 +213,7 @@ const Model3DEditor = (props) => {
                 return {
                     ...s,
                     defaultScene: { active: true, geometry: GEOMETRY[scene], material: MATERIAL.material },
-                    sections: [s.sections[0], matSec],
+                    sections: [...defaulSections, matSec],
                 };
             });
         }
@@ -220,7 +237,7 @@ const Model3DEditor = (props) => {
                         )}
                     </Suspense>
                     <OrbitControls />
-                    <Environment background files={Images.envTexture01} />
+                    <Environment ref={envRef} background files={Images.envTexture01} />
                     <PerspectiveCamera makeDefault position={[0, 0, 2]} />
                 </Canvas>
                 <DockerUI
@@ -236,6 +253,7 @@ const Model3DEditor = (props) => {
             <MaterialUI
                 key={"MUI"}
                 material={state.MUI.active}
+                matType={state.MUI.type}
                 disabled={state.MUI.disabled}
                 onCancel={handleMUICancel}
             />
@@ -267,12 +285,12 @@ const highlightMaterial = (editorId, materialIndex) => {
     }
 };
 
-const addMaterial = (editorId, materialIndex) => {
+const addMaterial = (editorId, materialIndex, matType) => {
     const matData = CACHE.materials[editorId][materialIndex];
-    // if doesnt exist return
+    const newMat = getMaterial(matType);
 
-    const mat = new MeshPhysicalMaterial();
-    matData.data = getMaterialKeyValue();
+    const mat = newMat.material;
+    matData.data = newMat.data;
 
     // update material at index
     matData.material = mat;
@@ -313,18 +331,23 @@ const addModel = (editorId, gltf, file) => {
     //cache the current file
     CACHE.files[editorId] = file;
     const obj = meshFromGltf(gltf);
+    console.log(obj);
 
-    //remove default material created by loader
-    obj.meshes.forEach((mesh) => {
-        const mat = mesh.material;
-        mesh.material = defaulMat;
-        mat.dispose();
-    });
+    if (CLEAR_MATERIALS) {
+        //remove default material created by loader
+        obj.meshes.forEach((mesh) => {
+            const mat = mesh.material;
+            mesh.material = defaulMat;
+            mat.dispose();
+        });
+    }
 
     //generate default references
     CACHE.meshes[editorId] = obj.meshes;
-    CACHE.materials[editorId] = obj.map.map((item) => {
-        return { data: {}, material: null, references: item, highlight: false };
+    CACHE.materials[editorId] = obj.map.map((item, index) => {
+        const mat = CLEAR_MATERIALS ? null : obj.materials[index];
+
+        return { data: {}, material: mat, references: item, highlight: false };
     });
     CACHE.textures[editorId] = [];
 
@@ -364,21 +387,6 @@ const clearModel = (editorId) => {
 ///////////////////////////////////////////////////////////////////////
 //Switch Scenes
 
-const GEOMETRY = {
-    cube: new BoxGeometry(1, 1, 1, 32, 32, 32),
-    sphere: new SphereGeometry(0.5, 64, 32),
-    cone: new ConeGeometry(0.5, 1.0, 32, 16),
-    cylinder: new CylinderGeometry(0.5, 0.5, 1, 32, 16),
-    plane: new PlaneGeometry(1, 1, 32, 32),
-};
-
-const MATERIAL = {
-    data: getMaterialKeyValue(),
-    material: new MeshStandardMaterial(),
-    highlight: false,
-    references: [],
-};
-
 const getMatrialSection = (count) => {
     const properties = [];
     for (let i = 0; i < count; i++) {
@@ -393,7 +401,7 @@ const getMatrialSection = (count) => {
     }
     return {
         sectionName: "Materials",
-        sectionId: "02",
+        sectionId: "ms_01",
         properties: properties,
     };
 };

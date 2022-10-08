@@ -283,6 +283,18 @@ input[type="number"] {
     background-color: rgb(128, 128, 128);
 }
 
+.colorpicker-container {
+    background-color: var(--uic-bg-color);
+    padding: 5px;
+    border-radius: 8px;
+    border: 1px solid var(--uic-border-color);
+}
+.btn-colorpicker {
+    background-color: inherit;
+    margin-top: 8px;
+    border: none;
+}
+
 /* ui-properites */
 
 .ui-container {
@@ -493,10 +505,28 @@ input[type="number"] {
     overflow: hidden;
 }
 
+.property-spacer {
+    height: 10px;
+}
+.property-line-divider {
+    height: 1px;
+    margin: 16px 0px;
+    background-color: var(--uic-border-color);
+}
+
 .btn-square-small {
     width: 16px;
     height: 16px;
     margin: 1px;
+}
+
+.btn-text {
+    width: 100%;
+    pointer-events: auto;
+    cursor: pointer;
+}
+.btn-text:hover {
+    background-color: aqua;
 }
 
 /* property slider filled */

@@ -9,6 +9,8 @@ import ColorProperty from "./ColorProperty";
 import ScalarSliderProperty from "./ScalarSliderProperty";
 import FileProperty from "./FileProperty";
 import MaterialProperty from "./MaterialProperty";
+import Spacer from "./Spacer";
+import LineDivider from "./LineDivider";
 
 // props structure = {sectionName , properties=[{id,name,type}]}
 
@@ -42,6 +44,12 @@ const mapNameToProperty = {
     },
     material: (property, onChange) => {
         return <MaterialProperty key={property.id} property={property} onChange={onChange} />;
+    },
+    spacer: (property) => {
+        return <Spacer key={property.id} />;
+    },
+    lineDivider: (property) => {
+        return <LineDivider key={property.id} />;
     },
 };
 
