@@ -2,6 +2,9 @@
 
 A simple utility to load glb files and edit its material properties for each material indices.
 
+![SS_Editor_preview](https://user-images.githubusercontent.com/99546305/192080898-1bd2e2f9-dc27-4b67-97f0-ff4ba5c122af.png)
+
+
 ## UIContainer, Sections and Properties
 
 This is the main wrapper component which takes in `sections` , `onChange`, `onUpdate` as props. UIContainers contains Sections and Sections contains Properties.
@@ -53,6 +56,3 @@ sections = [{
 },...]
 ```
 
-## DockerUI and MaterialUI
-
-These components acts as wrapper for `UIContainer` and add some features.
