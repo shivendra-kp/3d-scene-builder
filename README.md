@@ -2,7 +2,7 @@
 
 A simple utility to load glb files and edit its material properties for each material indices.
 
-![SS_Editor_preview](https://user-images.githubusercontent.com/99546305/192080898-1bd2e2f9-dc27-4b67-97f0-ff4ba5c122af.png)
+![SS_02](https://user-images.githubusercontent.com/99546305/194720236-6f1eab91-4068-4131-9680-548183548169.png)
 
 
 ## UIContainer, Sections and Properties
